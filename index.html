@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Середина пути — Архитектор ПО</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: transparent;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .motivation-card {
+            max-width: 760px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #1e2a5e 0%, #0f1a3b 100%);
+            padding: 28px 28px 20px 28px;
+            color: white;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            margin-bottom: 16px;
+        }
+
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .card-header p {
+            font-size: 1rem;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+
+        .card-content {
+            padding: 28px;
+        }
+
+        .progress-section {
+            margin-bottom: 28px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1e2a5e;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar-bg {
+            background: #e9eef3;
+            border-radius: 30px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: #7c3aed;
+            width: 50%;
+            height: 100%;
+            border-radius: 30px;
+        }
+
+        .two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .column h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .done-title { color: #6b21a5; }
+        .next-title { color: #1e2a5e; }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #2c3e4e;
+        }
+
+        .skill-list li::before {
+            content: "✓";
+            display: inline-block;
+            font-weight: 700;
+            font-size: 1rem;
+            min-width: 20px;
+            color: #7c3aed;
+        }
+
+        .next-list li::before {
+            content: "→";
+            color: #1e2a5e;
+            font-weight: 600;
+        }
+
+        .highlight {
+            background: #f5f0ff;
+            padding: 18px;
+            border-radius: 24px;
+            margin-top: 8px;
+            margin-bottom: 28px;
+            border-left: 4px solid #7c3aed;
+        }
+
+        .btn-support {
+            background: none;
+            border: 1px solid #cbd5e1;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            color: #1e2a5e;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-support:hover {
+            background: #ede9fe;
+            border-color: #7c3aed;
+        }
+
+        /* Стили для интерактивной самопроверки */
+        .self-check {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 8px 0;
+            margin-top: 10px;
+        }
+        .self-check h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e2a5e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .self-check-instruction {
+            font-size: 0.85rem;
+            color: #5a6e7c;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 3px solid #cbd5e1;
+        }
+
+        /* Карточка навыка */
+        .skill-card {
+            background: #faf9fe;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #ede9fe;
+            transition: 0.2s;
+        }
+
+        .skill-card:hover {
+            border-color: #c4b5fd;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
+        }
+
+        .skill-header {
+            margin-bottom: 12px;
+        }
+
+        .skill-title {
+            font-weight: 600;
+            color: #1e2a5e;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .skill-desc {
+            font-size: 0.85rem;
+            color: #5a6e7c;
+            line-height: 1.4;
+        }
+
+        /* Шкала уверенности */
+        .confidence-scale {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .confidence-level {
+            /* Убрали flex и min-width */
+        }
+
+        .confidence-level input[type="radio"] {
+            display: none;
+        }
+
+        .confidence-level label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 8px 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            background: white;
+            line-height: 1.3;
+        }
+
+        .confidence-level input[type="radio"]:checked + label {
+            border-color: #7c3aed;
+            background: #f5f0ff;
+            font-weight: 600;
+            color: #6b21a5;
+        }
+
+        .level-1 input[type="radio"]:checked + label { 
+            border-color: #94a3b8; 
+            background: #f1f5f9;
+            color: #475569;
+        }
+        .level-2 input[type="radio"]:checked + label { 
+            border-color: #60a5fa; 
+            background: #eff6ff;
+            color: #1e40af;
+        }
+        .level-3 input[type="radio"]:checked + label { 
+            border-color: #34d399; 
+            background: #ecfdf5;
+            color: #065f46;
+        }
+        .level-4 input[type="radio"]:checked + label { 
+            border-color: #a78bfa; 
+            background: #f5f3ff;
+            color: #5b21b6;
+        }
+
+        /* Кнопка проверки знаний */
+        .check-knowledge-btn {
+            background: none;
+            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #1e2a5e;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .check-knowledge-btn:hover {
+            background: #f0f9ff;
+            border-color: #60a5fa;
+            color: #1e40af;
+        }
+
+        /* Блок с вопросом */
+        .micro-question {
+            background: #f0f9ff;
+            border-left: 3px solid #60a5fa;
+            padding: 12px 14px;
+            margin-top: 12px;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.85rem;
+            color: #1e40af;
+            display: none;
+        }
+
+        .micro-question.visible {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-text {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .hint-toggle {
+            background: #60a5fa;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 6px;
+        }
+
+        .hint-toggle:hover {
+            background: #3b82f6;
+        }
+
+        .hint-text {
+            background: white;
+            border: 1px solid #bfdbfe;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #1e40af;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .hint-text.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Кнопки действий */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0 16px;
+        }
+
+        .btn-check {
+            background: #7c3aed;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-check:hover {
+            background: #6b21a5;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-reset {
+            background: #f0f2f5;
+            color: #1e2a5e;
+            border: 1px solid #cbd5e1;
+            padding: 9px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #e2e8f0;
+        }
+
+        /* Обратная связь */
+        .feedback {
+            background: #f5f0ff;
+            border-radius: 20px;
+            padding: 16px 18px;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            border-left: 4px solid #7c3aed;
+            color: #1e2a5e;
+            line-height: 1.6;
+        }
+
+        .feedback strong {
+            color: #6b21a5;
+        }
+
+        hr {
+            margin: 20px 0 10px;
+            border: none;
+            height: 1px;
+            background: #ede9fe;
+        }
+
+        @media (max-width: 550px) {
+            .card-header h2 { font-size: 1.5rem; }
+            .two-columns { flex-direction: column; gap: 20px; }
+            .confidence-scale { 
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="motivation-card">
+    <div class="card-header">
+        <div class="badge">🔷 50% программы позади</div>
+        <h2>Середина пути. <br>Вы уже многое прошли</h2>
+        <p>Длинная интенсивная программа — настоящее испытание. Но вы хорошо справляетесь. Давайте посмотрим, какой фундамент уже создан и что ждёт вас впереди.</p>
+    </div>
+
+    <div class="card-content">
+        <div class="progress-section">
+            <div class="progress-label">
+                <span>✅ Пройдены модули ARC-I-001 … ARC-I-004</span>
+                <span><strong>50%</strong> программы</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="two-columns">
+            <div class="column">
+                <h3 class="done-title">📌 Что вы уже умеете</h3>
+                <ul class="skill-list">
+                    <li>Обоснованно выбирать монолит / микросервисы и DDD</li>
+                    <li>Анализировать требования и переводить их в архитектуру</li>
+                    <li>Проектировать устойчивые системы под атрибуты качества</li>
+                    <li>Выстраивать интеграции (очереди, брокеры, синхронное/асинхронное взаимодействие)</li>
+                    <li>Оценивать сильные и слабые стороны архитектурных решений</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h3 class="next-title">⚙️ Что дальше</h3>
+                <ul class="skill-list next-list">
+                    <li>Технологии хранения данных + кэширование, партиционирование</li>
+                    <li>Kubernetes, CI/CD, облачная инфраструктура</li>
+                    <li>Документирование: UML, BPMN, ADR — профессиональный язык архитектора</li>
+                    <li>Микросервисная архитектура: от монолита к распределённой системе</li>
+                    <li>ИИ-инструменты для ускорения работы архитектора</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight">
+            <p>🏆 <strong>Сквозной проект «Mobile Street Food»</strong><br>
+            Вы уже начали наполнять архитектурное описание. Оставшаяся часть — добавите туда интеграции, инфраструктуру, масштабирование и уделите больше внимания микросервисам.</p>
+            <button class="btn-support" id="supportBtn">💬 Нужна поддержка или совет →</button>
+        </div>
+
+        <!-- Интерактивный блок: Самопроверка с прогрессивной шкалой -->
+        <div class="self-check">
+            <h3>🧠 Проверьте себя: оцените уровень владения навыками</h3>
+            
+            <div class="self-check-instruction">
+                Вы можете оценить свой уровень для каждого навыка: проверьте своё понимание каждой темы, ответив на мини-вопросы. Продумайте свой ответ на вопрос, а затем откройте подсказку, чтобы проверить себя.
+            </div>
+            
+            <div id="skillsList">
+                <!-- Навык 1: Архитектурные стили -->
+                <div class="skill-card" data-skill="arch_styles">
+                    <div class="skill-header">
+                        <span class="skill-title">📐 Архитектурные стили</span>
+                        <div class="skill-desc">Могу обосновать выбор монолита или микросервисов для конкретного проекта</div>
+                    </div>
+                    
+                    <div class="confidence-scale">
+                        <div class="confidence-level level-1">
+                            <input type="radio" name="skill_arch_styles" value="1" id="arch_styles_1">
+                            <label for="arch_styles_1">⚪ Не уверен</label>
+                        </div>
+                        <div class="confidence-level level-2">
+                            <input type="radio" name="skill_arch_styles" value="2" id="arch_styles_2">
+                            <label for="arch_styles_2">🔵 Могу с подсказкой</label>
+                        </div>
+                        <div class="confidence-level level-3">
+                            <input type="radio" name="skill_arch_styles" value="3" id="arch_styles_3">
+                            <label for="arch_styles_3">🟢 Уверен</label>
+                        </div>
+                        <div class="confidence-level level-4">
+                            <input type="radio" name="skill_arch_styles" value="4" id="arch_styles_4">
+                            <label for="arch_styles_4">🟣 Могу объяснить другим</label>
+                        </div>
+                    </div>
+                    
+                    <button class="check-knowledge-btn" onclick="toggleQuestion('arch_styles')">💡 Проверить понимание</button>
+                    
+                    <div class="micro-question" id="question_arch_styles">
+                        <div class="question-text">
+                            <strong>Вопрос:</strong> При каких условиях монолит предпочтительнее микросервисов?
+                        </div>
+                        <button class="hint-toggle" onclick="toggleHint('arch_styles')">Показать подсказку</button>
+                        <div class="hint-text" id="hint_arch_styles">
+                            → Малая команда (до 10 человек), простая/единая бизнес-логика, требуется быстрый старт, ограниченный бюджет на инфраструктуру.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Навык 2: Работа с требованиями -->
+                <div class="skill-card" data-skill="requirements">
+                    <div class="skill-header">
+                        <span class="skill-title">📋 Работа с требованиями</span>
+                        <div class="skill-desc">Умею собирать и анализировать нефункциональные требования, переводить бизнес-цели в архитектурные драйверы</div>
+                    </div>
+                    
+                    <div class="confidence-scale">
+                        <div class="confidence-level level-1">
+                            <input type="radio" name="skill_requirements" value="1" id="requirements_1">
+                            <label for="requirements_1">⚪ Не уверен</label>
+                        </div>
+                        <div class="confidence-level level-2">
+                            <input type="radio" name="skill_requirements" value="2" id="requirements_2">
+                            <label for="requirements_2">🔵 Могу с подсказкой</label>
+                        </div>
+                        <div class="confidence-level level-3">
+                            <input type="radio" name="skill_requirements" value="3" id="requirements_3">
+                            <label for="requirements_3">🟢 Уверен</label>
+                        </div>
+                        <div class="confidence-level level-4">
+                            <input type="radio" name="skill_requirements" value="4" id="requirements_4">
+                            <label for="requirements_4">🟣 Могу объяснить другим</label>
+                        </div>
+                    </div>
+                    
+                    <button class="check-knowledge-btn" onclick="toggleQuestion('requirements')">💡 Проверить понимание</button>
+                    
+                    <div class="micro-question" id="question_requirements">
+                        <div class="question-text">
+                            <strong>Вопрос:</strong> Бизнес говорит: "Система должна быть быстрой". Какие уточняющие вопросы вы зададите, чтобы превратить это в архитектурное требование?
+                        </div>
+                        <button class="hint-toggle" onclick="toggleHint('requirements')">Показать подсказку</button>
+                        <div class="hint-text" id="hint_requirements">
+                            → Быстрая для кого? (средний пользователь / VIP-клиенты)<br>
+                            → Какие операции? (загрузка страницы / обработка платежа)<br>
+                            → Как измерить? (95-й перцентиль &lt; 500мс)<br>
+                            → При какой нагрузке? (1000 RPS / 100 одновременных пользователей)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Навык 3: Устойчивые решения -->
+                <div class="skill-card" data-skill="reliability">
+                    <div class="skill-header">
+                        <span class="skill-title">🛡️ Устойчивые решения</span>
+                        <div class="skill-desc">Знаю тактики отказоустойчивости, резервирования и мониторинга для надёжных систем</div>
+                    </div>
+                    
+                    <div class="confidence-scale">
+                        <div class="confidence-level level-1">
+                            <input type="radio" name="skill_reliability" value="1" id="reliability_1">
+                            <label for="reliability_1">⚪ Не уверен</label>
+                        </div>
+                        <div class="confidence-level level-2">
+                            <input type="radio" name="skill_reliability" value="2" id="reliability_2">
+                            <label for="reliability_2">🔵 Могу с подсказкой</label>
+                        </div>
+                        <div class="confidence-level level-3">
+                            <input type="radio" name="skill_reliability" value="3" id="reliability_3">
+                            <label for="reliability_3">🟢 Уверен</label>
+                        </div>
+                        <div class="confidence-level level-4">
+                            <input type="radio" name="skill_reliability" value="4" id="reliability_4">
+                            <label for="reliability_4">🟣 Могу объяснить другим</label>
+                        </div>
+                    </div>
+                    
+                    <button class="check-knowledge-btn" onclick="toggleQuestion('reliability')">💡 Проверить понимание</button>
+                    
+                    <div class="micro-question" id="question_reliability">
+                        <div class="question-text">
+                            <strong>Вопрос:</strong> Сервис A вызывает сервис B по HTTP. Сервис B начал отвечать с задержкой 30 секунд. Какие 2 тактики защитят сервис A от каскадного отказа?
+                        </div>
+                        <button class="hint-toggle" onclick="toggleHint('reliability')">Показать подсказку</button>
+                        <div class="hint-text" id="hint_reliability">
+                            → <strong>Timeout</strong> (ограничение времени ожидания, например, 3 сек)<br>
+                            → <strong>Circuit Breaker</strong> (прекращение запросов после N неудачных попыток)<br>
+                            → <strong>Bulkhead</strong> (изоляция пула потоков/соединений для разных зависимостей)<br>
+                            ⚠️ <strong>Важно:</strong> Retry при систематических задержках может усугубить проблему! Retry уместен только при спорадических сбоях (сетевые глитчи), а не при перегрузке сервиса.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Навык 4: Интеграция микросервисов -->
+                <div class="skill-card" data-skill="integration">
+                    <div class="skill-header">
+                        <span class="skill-title">🔗 Интеграция микросервисов</span>
+                        <div class="skill-desc">Понимаю разницу между синхронными (REST/gRPC) и асинхронными (брокеры, очереди) взаимодействиями</div>
+                    </div>
+                    
+                    <div class="confidence-scale">
+                        <div class="confidence-level level-1">
+                            <input type="radio" name="skill_integration" value="1" id="integration_1">
+                            <label for="integration_1">⚪ Не уверен</label>
+                        </div>
+                        <div class="confidence-level level-2">
+                            <input type="radio" name="skill_integration" value="2" id="integration_2">
+                            <label for="integration_2">🔵 Могу с подсказкой</label>
+                        </div>
+                        <div class="confidence-level level-3">
+                            <input type="radio" name="skill_integration" value="3" id="integration_3">
+                            <label for="integration_3">🟢 Уверен</label>
+                        </div>
+                        <div class="confidence-level level-4">
+                            <input type="radio" name="skill_integration" value="4" id="integration_4">
+                            <label for="integration_4">🟣 Могу объяснить другим</label>
+                        </div>
+                    </div>
+                    
+                    <button class="check-knowledge-btn" onclick="toggleQuestion('integration')">💡 Проверить понимание</button>
+                    
+                    <div class="micro-question" id="question_integration">
+                        <div class="question-text">
+                            <strong>Вопрос:</strong> Когда стоит выбрать асинхронное взаимодействие через брокер сообщений вместо синхронного REST/gRPC?
+                        </div>
+                        <button class="hint-toggle" onclick="toggleHint('integration')">Показать подсказку</button>
+                        <div class="hint-text" id="hint_integration">
+                            → Когда не нужен немедленный ответ (отложенная обработка)<br>
+                            → Когда нужна гарантия доставки + переотправка при сбоях<br>
+                            → Когда хотим развязать сервисы (отправитель не знает получателей)<br>
+                            → Примеры: отправка email, обработка заказов, аналитика событий
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Навык 5: DDD и ограниченные контексты -->
+                <div class="skill-card" data-skill="ddd">
+                    <div class="skill-header">
+                        <span class="skill-title">🧩 DDD и ограниченные контексты</span>
+                        <div class="skill-desc">Применяю тактическое и стратегическое моделирование для сложной предметной области</div>
+                    </div>
+                    
+                    <div class="confidence-scale">
+                        <div class="confidence-level level-1">
+                            <input type="radio" name="skill_ddd" value="1" id="ddd_1">
+                            <label for="ddd_1">⚪ Не уверен</label>
+                        </div>
+                        <div class="confidence-level level-2">
+                            <input type="radio" name="skill_ddd" value="2" id="ddd_2">
+                            <label for="ddd_2">🔵 Могу с подсказкой</label>
+                        </div>
+                        <div class="confidence-level level-3">
+                            <input type="radio" name="skill_ddd" value="3" id="ddd_3">
+                            <label for="ddd_3">🟢 Уверен</label>
+                        </div>
+                        <div class="confidence-level level-4">
+                            <input type="radio" name="skill_ddd" value="4" id="ddd_4">
+                            <label for="ddd_4">🟣 Могу объяснить другим</label>
+                        </div>
+                    </div>
+                    
+                    <button class="check-knowledge-btn" onclick="toggleQuestion('ddd')">💡 Проверить понимание</button>
+                    
+                    <div class="micro-question" id="question_ddd">
+                        <div class="question-text">
+                            <strong>Вопрос:</strong> У вас есть сущность "Пользователь". В контексте "Аутентификация" и в контексте "Доставка заказов" — это одна модель или разные? Почему?
+                        </div>
+                        <button class="hint-toggle" onclick="toggleHint('ddd')">Показать подсказку</button>
+                        <div class="hint-text" id="hint_ddd">
+                            → <strong>Разные модели</strong> (разные bounded contexts)<br>
+                            → В "Аутентификации": важны email, пароль, роли<br>
+                            → В "Доставке": важны адрес, телефон, история заказов<br>
+                            → Попытка сделать единую модель → bloated entity со всеми полями
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-check" id="showFeedbackBtn">💡 Получить персональные рекомендации</button>
+                <button class="btn-reset" id="resetChecksBtn">⟳ Сбросить все</button>
+            </div>
+            <div id="feedbackArea" class="feedback" style="display: none;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Функции для работы с вопросами и подсказками
+    function toggleQuestion(skillId) {
+        const questionBlock = document.getElementById('question_' + skillId);
+        questionBlock.classList.toggle('visible');
+    }
+
+    function toggleHint(skillId) {
+        const hintBlock = document.getElementById('hint_' + skillId);
+        hintBlock.classList.toggle('visible');
+    }
+
+    // Генерация персональных рекомендаций
+    const feedbackDiv = document.getElementById('feedbackArea');
+    const showBtn = document.getElementById('showFeedbackBtn');
+    const resetBtn = document.getElementById('resetChecksBtn');
+
+    function getSkillLevels() {
+        const skills = ['arch_styles', 'requirements', 'reliability', 'integration', 'ddd'];
+        const levels = {};
+        
+        skills.forEach(skill => {
+            const selected = document.querySelector(`input[name="skill_${skill}"]:checked`);
+            if (selected) {
+                levels[skill] = parseInt(selected.value);
+            }
+        });
+        
+        return levels;
+    }
+
+    function generateRecommendation(levels) {
+        const skillNames = {
+            'arch_styles': 'Архитектурные стили',
+            'requirements': 'Работа с требованиями',
+            'reliability': 'Устойчивые решения',
+            'integration': 'Интеграция микросервисов',
+            'ddd': 'DDD и ограниченные контексты'
+        };
+
+        const recommendations = {
+            'arch_styles': {
+                1: 'Начните с модуля ARC-I-001: разберитесь с критериями выбора монолита и микросервисов (~30 мин)',
+                2: 'Закрепите на практике: разберите 2-3 кейса выбора архитектуры (Netflix, Shopify)',
+                3: 'Попробуйте обосновать выбор для вашего учебного проекта',
+                4: 'Отлично! Помогите коллегам в чате курса разобраться с архитектурными стилями'
+            },
+            'requirements': {
+                1: 'Посмотрите раздел о нефункциональных требованиях в ARC-I-002 (~25 мин)',
+                2: 'Потренируйтесь формулировать NFR для типовых сценариев (быстродействие, надёжность)',
+                3: 'Примените знания: составьте сценарии качества для учебного проекта',
+                4: 'Супер! Вы готовы документировать требования на профессиональном уровне'
+            },
+            'reliability': {
+                1: 'Изучите паттерны отказоустойчивости в ARC-I-003: Timeout, Circuit Breaker (~30 мин)',
+                2: 'Разберите примеры применения паттернов в реальных системах',
+                3: 'Добавьте тактики устойчивости в архитектуру вашего проекта',
+                4: 'Вы эксперт! Можете проектировать высоконадёжные системы'
+            },
+            'integration': {
+                1: 'Вернитесь к теме синхронных и асинхронных интеграций в ARC-I-004 (~25 мин)',
+                2: 'Сравните REST, gRPC и брокеры сообщений — когда что использовать',
+                3: 'Спроектируйте интеграции для микросервисов вашего проекта',
+                4: 'Отлично! Вы понимаете нюансы различных подходов к интеграции'
+            },
+            'ddd': {
+                1: 'Начните со стратегического DDD: bounded contexts и context mapping (~35 мин)',
+                2: 'Потренируйтесь выделять контексты на примерах (интернет-магазин, банк)',
+                3: 'Примените DDD для моделирования предметной области вашего проекта',
+                4: 'Вы владеете DDD на продвинутом уровне! Используйте в сложных проектах'
+            }
+        };
+
+        if (Object.keys(levels).length === 0) {
+            return "📊 Выберите уровни владения навыками, чтобы получить персональные рекомендации.";
+        }
+
+        const avgLevel = Object.values(levels).reduce((a, b) => a + b, 0) / Object.values(levels).length;
+        const weakSkills = Object.entries(levels).filter(([_, level]) => level <= 2);
+        const strongSkills = Object.entries(levels).filter(([_, level]) => level >= 3);
+
+        let feedback = "";
+
+        if (avgLevel >= 3.5) {
+            feedback += "<strong>🌟 Отличный прогресс!</strong> Вы уверенно владеете большинством навыков.<br><br>";
+        } else if (avgLevel >= 2.5) {
+            feedback += "<strong>✅ Хороший уровень!</strong> Вы на верном пути, есть области для усиления.<br><br>";
+        } else {
+            feedback += "<strong>📚 Вы в начале пути</strong> — это нормально! Сосредоточьтесь на базовых темах.<br><br>";
+        }
+
+        if (weakSkills.length > 0) {
+            feedback += "<strong>🎯 Рекомендуем уделить внимание:</strong><br>";
+            weakSkills.forEach(([skill, level]) => {
+                feedback += `• <strong>${skillNames[skill]}</strong>: ${recommendations[skill][level]}<br>`;
+            });
+            feedback += "<br>";
+        }
+
+        if (strongSkills.length > 0) {
+            feedback += "<strong>💪 Ваши сильные стороны:</strong><br>";
+            strongSkills.forEach(([skill, level]) => {
+                feedback += `• <strong>${skillNames[skill]}</strong>: ${recommendations[skill][level]}<br>`;
+            });
+        }
+
+        feedback += "<br><strong>💡 Совет:</strong> Выделите 2-3 дня на повторение слабых мест перед следующими модулями. Вы справитесь!";
+
+        return feedback;
+    }
+
+    function updateFeedback() {
+        const levels = getSkillLevels();
+        const recommendation = generateRecommendation(levels);
+        feedbackDiv.innerHTML = recommendation;
+        feedbackDiv.style.display = 'block';
+        feedbackDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function resetChecks() {
+        const radios = document.querySelectorAll('input[type="radio"]');
+        radios.forEach(radio => radio.checked = false);
+        
+        const questions = document.querySelectorAll('.micro-question');
+        questions.forEach(q => q.classList.remove('visible'));
+        
+        const hints = document.querySelectorAll('.hint-text');
+        hints.forEach(h => h.classList.remove('visible'));
+        
+        feedbackDiv.style.display = 'none';
+    }
+
+    showBtn.addEventListener('click', updateFeedback);
+    resetBtn.addEventListener('click', resetChecks);
+
+    // Кнопка поддержки
+    const supportBtn = document.getElementById('supportBtn');
+    if (supportBtn) {
+        supportBtn.addEventListener('click', () => {
+            window.location.href = 'mailto:training@IBS.RU?subject=Нужна поддержка / середина программы&body=Здравствуйте! Я на середине программы «Архитектор ПО». Хотел(а) бы получить совет или помощь по графику.';
+        });
+    }
+</script>
+</body>
+</html>
